@@ -18,7 +18,10 @@ public class PlayerIdleState : IPlayerState
 
     public void Update()
     {
-        
+        if (_player.InputH != 0 || _player.InputV != 0)
+        {
+            _player.StateMachine.TransitionState(new PlayerWalkState(_player));
+        }
     }
 
     public void Exit()

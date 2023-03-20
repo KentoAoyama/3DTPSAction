@@ -25,6 +25,8 @@ public class PlayerStateMachine
         _currentState.Exit();
         _currentState = nextState;
         nextState.Enter();
+
+        Debug.Log($"{nextState}‚ÉPlayer‚ÌState‚ª•ÏX‚³‚ê‚Ü‚µ‚½");
     }
 
     /// <summary>
