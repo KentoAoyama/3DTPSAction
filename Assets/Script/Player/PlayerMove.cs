@@ -32,12 +32,12 @@ public class PlayerMove
     /// </summary>
     /// <param name="inputH">‰¡•û–@‚Ì“ü—Í</param>
     /// <param name="inputV">c•ûŒü‚Ì“ü—Í</param>
-    public void Walk(float inputH, float inputV)
+    public void Walk(Vector2 moveDir)
     {
         var deltaTime = Time.deltaTime;
 
         //ˆÚ“®‚ğ‚·‚é•ûŒü‚ğƒJƒƒ‰‚ÌŒü‚«‚ğQÆ‚µ‚½‚à‚Ì‚É‚·‚é
-        var velocity = Vector3.right * inputH + Vector3.forward * inputV;
+        var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
         velocity = Camera.main.transform.TransformDirection(velocity);
         velocity.y = 0;
 

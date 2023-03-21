@@ -18,7 +18,7 @@ public class PlayerIdleState : IPlayerState
 
     public void Update()
     {
-        if (_player.InputH != 0 || _player.InputV != 0)
+        if (_player.Input.GetMoveDir() != new Vector2(0f, 0f))
         {
             _player.StateMachine.TransitionState(new PlayerWalkState(_player));
         }

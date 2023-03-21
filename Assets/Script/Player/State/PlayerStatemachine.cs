@@ -6,7 +6,6 @@ using UnityEngine;
 public class PlayerStateMachine
 {
     private IPlayerState _currentState;
-    public IPlayerState CurrentState => _currentState;
 
     public void Initialized(IPlayerState state)
     {

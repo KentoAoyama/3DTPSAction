@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,10 +15,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public PlayerStateMachine StateMachine => _stateMachine;
 
-    private float _h;
-    private float _v;
-    public float InputH => _h;
-    public float InputV => _v;
+    [Inject]
+    private readonly IInputProvider _input;
+    public IInputProvider Input => _input;
 
     void Start()
     {
@@ -28,15 +28,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        //‚Æ‚è‚ ‚¦‚¸‰¼’u‚«‚Å“ü—Í‚ðŽó‚¯Žæ‚é
-        _h = Input.GetAxisRaw("Horizontal");
-        _v = Input.GetAxisRaw("Vertical");
-
         _stateMachine.Update();
     }
 
     public void Walk()
     {
-        _mover.Walk(_h, _v);
+        _mover.Walk(_input.GetMoveDir());
     }
 }
