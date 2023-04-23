@@ -18,10 +18,13 @@ public class PlayerIdleState : IPlayerState
 
     public void Update()
     {
+        // ˆÚ“®‚Ì“ü—Í‚ª‚ ‚ê‚ÎMoveState‚É‘JˆÚ
         if (_player.Input.GetMoveDir() != new Vector2(0f, 0f))
         {
             _player.StateMachine.TransitionState(new PlayerWalkState(_player));
         }
+        // Dash‚Ì“ü—Í‚ª‚ ‚ê‚ÎDashState‚É‘JˆÚ
+        if (_player.Input.GetDash())
     }
 
     public void Exit()

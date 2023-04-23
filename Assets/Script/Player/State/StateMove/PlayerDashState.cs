@@ -13,7 +13,7 @@ public class PlayerDashState : IPlayerState
 
     public void Enter()
     {
-
+        _player.Dash();
     }
 
     public void Update()

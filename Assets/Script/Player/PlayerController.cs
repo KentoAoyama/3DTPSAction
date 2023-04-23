@@ -5,9 +5,17 @@ using VContainer;
 
 public class PlayerController : MonoBehaviour
 {
+    [Tooltip("PlayerのRigidbody")]
+    [SerializeField]
+    private Rigidbody _rb;
+
     [Tooltip("Playerの移動に関する処理を定義するクラス")]
     [SerializeField]
-    private PlayerMove _mover;
+    private PlayerMove _move;
+
+    [Tooltip("Playerのダッシュに関する処理を定義するクラス")]
+    [SerializeField]
+    private PlayerDash _dash;
 
     private readonly PlayerStateMachine _stateMachine = new();
     /// <summary>
@@ -21,8 +29,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        _mover.Initialize(gameObject.transform);
-
+        _move.Initialize(gameObject.transform);
+        _dash.Initialize(gameObject.transform, _rb);
         _stateMachine.Initialized(new PlayerIdleState(this));
     }
 
@@ -31,8 +39,19 @@ public class PlayerController : MonoBehaviour
         _stateMachine.Update();
     }
 
+    /// <summary>
+    /// 通常の移動時に行う処理
+    /// </summary>
     public void Walk()
     {
-        _mover.Walk(_input.GetMoveDir());
+        _move.Walk(_input.GetMoveDir());
+    }
+
+    /// <summary>
+    /// Dash行う際に行う処理
+    /// </summary>
+    public void Dash()
+    {
+        _dash.Dash(_input.GetMoveDir());
     }
 }

@@ -24,6 +24,11 @@ public class PlayerWalkState : IPlayerState
             _player.StateMachine.TransitionState(new PlayerIdleState(_player));
         }
 
+        if (_player.Input.GetDash())
+        {
+            _player.StateMachine.TransitionState(new PlayerDashState(_player));
+        }
+
         _player.Walk();
     }
 

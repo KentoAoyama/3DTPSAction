@@ -30,8 +30,6 @@ public class PlayerMove
     /// <summary>
     /// Playerの歩行に関する処理を定義するメソッド
     /// </summary>
-    /// <param name="inputH">横方法の入力</param>
-    /// <param name="inputV">縦方向の入力</param>
     public void Walk(Vector2 moveDir)
     {
         var deltaTime = Time.deltaTime;
