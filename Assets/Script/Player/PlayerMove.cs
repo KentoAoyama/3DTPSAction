@@ -13,18 +13,17 @@ public class PlayerMove
     [SerializeField]
     private float _rotationSpeed = 200f;
 
-    [Tooltip("Player‚ÌRigidBody")]
-    [SerializeField]
-    private Rigidbody _rb;
-
     /// <summary>
     /// Player‚ÌTransform
     /// </summary>
     private Transform _transform;
 
-    public void Initialize(Transform transform)
+    private Rigidbody _rb;
+
+    public void Initialized(Transform transform, Rigidbody rb)
     {
         _transform = transform;
+        _rb = rb; ;
     }
 
     /// <summary>

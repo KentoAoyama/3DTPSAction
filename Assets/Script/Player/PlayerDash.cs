@@ -1,6 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using System.Threading;
+using System.Text;
+using System;
 
 [System.Serializable]
 public class PlayerDash
@@ -27,7 +32,7 @@ public class PlayerDash
     /// </summary>
     private Rigidbody _rb;
 
-    public void Initialize(Transform transform, Rigidbody rb)
+    public void Initialized(Transform transform, Rigidbody rb)
     {
         _transform = transform;
         _rb = rb;
@@ -36,9 +41,14 @@ public class PlayerDash
     /// <summary>
     /// Playerの歩行に関する処理を定義するメソッド
     /// </summary>
-    public void Dash(Vector2 moveDir)
+    public async UniTask DashAsync(CancellationToken token)
     {
         _renderer.enabled = false;
-        Debug.Log("Dash!!!");
+        Debug.Log("DashStart");
+
+        await UniTask.Delay(TimeSpan.FromSeconds(_dashTime));
+
+        _renderer.enabled = true;
+        Debug.Log("DashFinish");
     }
 }

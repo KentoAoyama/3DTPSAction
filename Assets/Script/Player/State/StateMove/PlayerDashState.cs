@@ -1,5 +1,7 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class PlayerDashState : IPlayerState
@@ -13,7 +15,17 @@ public class PlayerDashState : IPlayerState
 
     public void Enter()
     {
-        _player.Dash();
+        DashAsync(default).Forget();
+    }
+
+    /// <summary>
+    /// Dash‚Ìˆ—‚ğAsync‚Ås‚¤
+    /// </summary>
+    private async UniTask DashAsync(CancellationToken token)
+    {
+        await _player.DashAsync(token);
+
+        _player.StateMachine.TransitionState(new PlayerIdleState(_player));
     }
 
     public void Update()

@@ -25,6 +25,9 @@ public class PlayerIdleState : IPlayerState
         }
         // Dash‚Ì“ü—Í‚ª‚ ‚ê‚ÎDashState‚É‘JˆÚ
         if (_player.Input.GetDash())
+        {
+            _player.StateMachine.TransitionState(new PlayerDashState(_player));
+        }
     }
 
     public void Exit()

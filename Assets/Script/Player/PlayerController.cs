@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using VContainer;
 
@@ -29,8 +29,16 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        _move.Initialize(gameObject.transform);
-        _dash.Initialize(gameObject.transform, _rb);
+        Initialized();
+    }
+
+    /// <summary>
+    /// クラスの初期化処理を行う
+    /// </summary>
+    private void Initialized()
+    {
+        _move.Initialized(gameObject.transform, _rb);
+        _dash.Initialized(gameObject.transform, _rb);
         _stateMachine.Initialized(new PlayerIdleState(this));
     }
 
@@ -48,10 +56,10 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Dash行う際に行う処理
+    /// Dash行う際の処理
     /// </summary>
-    public void Dash()
+    public async UniTask DashAsync(CancellationToken token)
     {
-        _dash.Dash(_input.GetMoveDir());
+        await _dash.DashAsync(token);
     }
 }
