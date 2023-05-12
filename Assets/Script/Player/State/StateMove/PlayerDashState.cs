@@ -30,7 +30,7 @@ public class PlayerDashState : IPlayerState
 
     public void Update()
     {
-        
+        _player.Walk();
     }
 
     public void Exit()

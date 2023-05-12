@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using System.Text;
 using System;
+using UnityEngine.VFX;
 
 [System.Serializable]
 public class PlayerDash
@@ -22,6 +23,14 @@ public class PlayerDash
     [SerializeField]
     private float _dashTime = 1.5f;
 
+    [Tooltip("VisualEffect")]
+    [SerializeField]
+    private VisualEffect _effect;
+
+    [Tooltip("Dash時のエフェクトの量")]
+    [SerializeField]
+    private int _effectRate = 2000;
+
     /// <summary>
     /// PlayerのTransform
     /// </summary>
@@ -36,6 +45,7 @@ public class PlayerDash
     {
         _transform = transform;
         _rb = rb;
+        _effect.SetInt("Rate", 0);
     }
 
     /// <summary>
@@ -43,11 +53,13 @@ public class PlayerDash
     /// </summary>
     public async UniTask DashAsync(CancellationToken token)
     {
+        _effect.SetInt("Rate", _effectRate);
         _renderer.enabled = false;
         Debug.Log("DashStart");
 
         await UniTask.Delay(TimeSpan.FromSeconds(_dashTime));
 
+        _effect.SetInt("Rate", 0);
         _renderer.enabled = true;
         Debug.Log("DashFinish");
     }
