@@ -988,6 +988,11 @@ PrefabInstance:
       propertyPath: _dash._renderer
       value: 
       objectReference: {fileID: 1371132830}
+    - target: {fileID: 919132148177967800, guid: f659a755b987a1a42a94497dbfdf831b,
+        type: 3}
+      propertyPath: _dash._dashSpeed
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 7745844663328727340, guid: f659a755b987a1a42a94497dbfdf831b,
         type: 3}
       propertyPath: m_Enabled

@@ -54,7 +54,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void Walk()
     {
-        _move.Walk(_input.GetMoveDir());
+        _move.Move(_input.GetMoveDir());
+    }
+
+    public void Dash()
+    {
+        _move.Move(_input.GetMoveDir(), _dash.DashSpeed);
     }
 
     /// <summary>

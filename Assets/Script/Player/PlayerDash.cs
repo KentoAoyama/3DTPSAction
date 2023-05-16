@@ -18,6 +18,7 @@ public class PlayerDash
     [Tooltip("ˆÚ“®‚·‚é‘¬“x")]
     [SerializeField]
     private float _dashSpeed = 200f;
+    public float DashSpeed => _dashSpeed;
 
     [Tooltip("ˆÚ“®‚·‚éŠÔ")]
     [SerializeField]
