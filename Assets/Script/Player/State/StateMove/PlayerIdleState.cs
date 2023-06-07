@@ -13,7 +13,7 @@ public class PlayerIdleState : IPlayerState
 
     public void Enter()
     {
-
+        Debug.Log("IdleState");
     }
 
     public void Update()
@@ -23,10 +23,17 @@ public class PlayerIdleState : IPlayerState
         {
             _player.StateMachine.TransitionState(new PlayerWalkState(_player));
         }
+
         // Dash‚Ì“ü—Í‚ª‚ ‚ê‚ÎDashState‚É‘JˆÚ
         if (_player.Input.GetDash())
         {
             _player.StateMachine.TransitionState(new PlayerDashState(_player));
+        }
+
+        //’n–Ê‚ÉÚG‚µ‚Ä‚¢‚È‚¯‚ê‚ÎFalló‘Ô‚Ö‘JˆÚ
+        if (!_player.IsGround())
+        {
+            _player.StateMachine.TransitionState(new PlayerFallState(_player));
         }
     }
 

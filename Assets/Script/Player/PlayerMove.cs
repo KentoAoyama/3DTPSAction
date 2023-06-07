@@ -33,15 +33,17 @@ public class PlayerMove
         //移動をする方向をカメラの向きを参照したものにする
         var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
         velocity = Camera.main.transform.TransformDirection(velocity);
-        velocity.y = 0;
+        velocity = speed * deltaTime * velocity.normalized;
+        velocity.y = _rb.velocity.y;
 
         //移動を行う処理
-        _rb.velocity = speed * deltaTime * velocity.normalized;
+        _rb.velocity = velocity;
 
         //向きを徐々に変更する
         Quaternion changeRotation = default;
         if (velocity.sqrMagnitude > 0.5f)　//速度が一定以上なら、向きを変更する
         {
+            velocity.y = 0f;
             changeRotation = Quaternion.LookRotation(velocity, Vector3.up);
         }
         //第1引数のQuaternionを第２引数のQuaternionまで第３引数の速度で変化させる

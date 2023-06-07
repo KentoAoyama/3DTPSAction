@@ -13,20 +13,28 @@ public class PlayerWalkState : IPlayerState
 
     public void Enter()
     {
+        Debug.Log("WalkState");
 
     }
 
     public void Update()
     {
-        //“ü—Í‚ª–³‚¯‚ê‚ÎIdleó‘Ô‚ÖˆÚs
+        //“ü—Í‚ª–³‚¯‚ê‚ÎIdleó‘Ô‚Ö‘JˆÚ
         if (_player.Input.GetMoveDir() == new Vector2(0f, 0f))
         {
             _player.StateMachine.TransitionState(new PlayerIdleState(_player));
         }
 
+        //Dash‚Ì“ü—Í‚ª‚ ‚ê‚ÎDashó‘Ô‚Ö‘JˆÚ
         if (_player.Input.GetDash())
         {
             _player.StateMachine.TransitionState(new PlayerDashState(_player));
+        }
+
+        //’n–Ê‚ÉÚG‚µ‚Ä‚¢‚È‚¯‚ê‚ÎFalló‘Ô‚Ö‘JˆÚ
+        if (!_player.IsGround())
+        {
+            _player.StateMachine.TransitionState(new PlayerFallState(_player));
         }
 
         _player.Walk();
