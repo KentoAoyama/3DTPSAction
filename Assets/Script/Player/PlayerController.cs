@@ -26,6 +26,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private PlayerFall _fall;
 
+    [Tooltip("PlayerのAnimationに関する処理を定義するクラス")]
+    [SerializeField]
+    private PlayerAnimation _animation;
+
     private readonly PlayerStateMachine _stateMachine = new();
     /// <summary>
     /// PlayerのStateを管理するクラス
@@ -49,11 +53,13 @@ public class PlayerController : MonoBehaviour
         _move.Initialized(gameObject.transform, _rb);
         _dash.Initialized(gameObject.transform, _rb);
         _fall.Initialized(gameObject.transform);
+        _animation.Initialized(this);
         _stateMachine.Initialized(new PlayerIdleState(this));
     }
 
     void Update()
     {
+        _animation.Update();
         _stateMachine.Update();
     }
 

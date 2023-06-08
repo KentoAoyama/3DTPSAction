@@ -5,6 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerMove
 {
+    [Tooltip("移動するスピード")]
+    [SerializeField]
+    private float _speed = 500f;
+
     [Tooltip("向きを変更するスピード")]
     [SerializeField]
     private float _rotationSpeed = 200f;
@@ -26,14 +30,14 @@ public class PlayerMove
     /// Playerの移動に関する処理を定義するメソッド
     /// </summary>
 
-    public void Move(Vector2 moveDir, float speed = 200f)
+    public void Move(Vector2 moveDir)
     {
         var deltaTime = Time.deltaTime;
 
         //移動をする方向をカメラの向きを参照したものにする
         var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
         velocity = Camera.main.transform.TransformDirection(velocity);
-        velocity = speed * deltaTime * velocity.normalized;
+        velocity = _speed * deltaTime * velocity.normalized;
         velocity.y = _rb.velocity.y;
 
         //移動を行う処理
