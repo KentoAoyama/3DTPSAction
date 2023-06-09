@@ -26,7 +26,7 @@ public class PlayerDashState : IPlayerState
     {
         await _player.DashAsync(token);
 
-        _player.StateMachine.TransitionState(new PlayerIdleState(_player));
+        _player.StateMachine.TransitionState(new PlayerWalkState(_player));
     }
 
     public void Update()

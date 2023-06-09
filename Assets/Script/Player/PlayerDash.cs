@@ -26,34 +26,24 @@ public class PlayerDash
     [SerializeField]
     private int _effectRate = 2000;
 
-    /// <summary>
-    /// PlayerのTransform
-    /// </summary>
-    private Transform _transform;
+    private const string EFFECT_RATE = "Rate";
 
-    /// <summary>
-    /// PlayerのRigidbody
-    /// </summary>
-    private Rigidbody _rb;
-
-    public void Initialized(Transform transform, Rigidbody rb)
+    public void Initialized()
     {
-        _transform = transform;
-        _rb = rb;
-        _effect.SetInt("Rate", 0);
+        _effect.SetInt(EFFECT_RATE, 0);
     }
 
     /// <summary>
     /// Playerの歩行に関する処理を定義するメソッド
     /// </summary>
-    public async UniTask DashAsync(CancellationToken token, PlayerController player)
+    public async UniTask DashAsync(CancellationToken token, IInputProvider input)
     {
-        _effect.SetInt("Rate", _effectRate);
+        _effect.SetInt(EFFECT_RATE, _effectRate);
         _renderer.enabled = false;
 
-        await UniTask.WaitWhile(() => player.Input.GetDash(), cancellationToken: token);
+        await UniTask.WaitWhile(() => input.GetDash(), cancellationToken: token);
 
-        _effect.SetInt("Rate", 0);
+        _effect.SetInt(EFFECT_RATE, 0);
         _renderer.enabled = true;
     }
 
@@ -62,7 +52,7 @@ public class PlayerDash
     /// Y方向の動きがある以外はほとんど同じ
     /// </summary>
     /// <param name="moveDir"></param>
-    public void DashMove(Vector2 moveDir)
+    public void DashMove(Transform moveTransform, Rigidbody rb, Vector2 moveDir)
     {
         var deltaTime = Time.deltaTime;
 
@@ -71,7 +61,7 @@ public class PlayerDash
         velocity = Camera.main.transform.TransformDirection(velocity);
 
         //移動を行う処理
-        _rb.velocity = _dashSpeed * deltaTime * velocity.normalized;
+        rb.velocity = _dashSpeed * deltaTime * velocity.normalized;
 
         //向きを徐々に変更する
         Quaternion changeRotation = default;
@@ -81,9 +71,9 @@ public class PlayerDash
             changeRotation = Quaternion.LookRotation(velocity, Vector3.up);
         }
         //第1引数のQuaternionを第２引数のQuaternionまで第３引数の速度で変化させる
-        _transform.rotation =
+        moveTransform.rotation =
             Quaternion.RotateTowards(
-                _transform.rotation,
+                moveTransform.rotation,
                 changeRotation,
                 _rotationSpeed * deltaTime);
     }

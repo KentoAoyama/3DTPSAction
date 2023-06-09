@@ -20,7 +20,7 @@ public class PlayerWalkState : IPlayerState
     public void Update()
     {
         //“ü—Í‚ª–³‚¯‚ê‚ÎIdleó‘Ô‚Ö‘JˆÚ
-        if (_player.Input.GetMoveDir() == new Vector2(0f, 0f))
+        if (_player.Input.GetMoveDir() == Vector2.zero)
         {
             _player.StateMachine.TransitionState(new PlayerIdleState(_player));
         }

@@ -9,28 +9,27 @@ public class PlayerAnimation
     [SerializeField]
     private Animator _animator;
 
-    private PlayerController _player;
 
-    public void Initialized(PlayerController player)
+    public void Initialized()
     {
-        _player = player;
+        
     }
 
     /// <summary>
     /// PlayerController内のUpdateで行う処理
     /// </summary>
-    public void Update()
+    public void Update(float speed)
     {
-        WalkParameterSet();
+        WalkParameterSet(speed);
     }
 
     /// <summary>
     /// 移動時のアニメーションを受け取る
     /// </summary>
-    private void WalkParameterSet()
+    private void WalkParameterSet(float speed)
     {
         _animator.SetFloat(
             "InputMove",
-            _player.Input.GetMoveDir().sqrMagnitude);
+            speed);
     }
 }

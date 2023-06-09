@@ -5,7 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.VFX;
+using UnityEngine.Windows;
 using VContainer;
+using static UnityEditor.Experimental.GraphView.GraphView;
 using static UnityEngine.UI.Image;
 
 public class PlayerController : MonoBehaviour
@@ -50,16 +52,15 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Initialized()
     {
-        _move.Initialized(gameObject.transform, _rb);
-        _dash.Initialized(gameObject.transform, _rb);
-        _fall.Initialized(gameObject.transform);
-        _animation.Initialized(this);
+        _move.Initialized();
+        _dash.Initialized();
+        _fall.Initialized();
         _stateMachine.Initialized(new PlayerIdleState(this));
     }
 
     void Update()
     {
-        _animation.Update();
+        _animation.Update(_input.GetMoveDir().sqrMagnitude);
         _stateMachine.Update();
     }
 
@@ -68,7 +69,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void Walk()
     {
-        _move.Move(_input.GetMoveDir());
+        _move.Move(
+            gameObject.transform,
+            _rb, 
+            _input.GetMoveDir());
     }
 
     /// <summary>
@@ -76,7 +80,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void Dash()
     {
-        _dash.DashMove(_input.GetMoveDir());
+        _dash.DashMove(
+            gameObject.transform,
+            _rb, 
+            _input.GetMoveDir());
     }
 
     /// <summary>
@@ -84,12 +91,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public async UniTask DashAsync(CancellationToken token)
     {
-        await _dash.DashAsync(token, this);
+        await _dash.DashAsync( token, _input);
     }
 
 Å@Å@public bool IsGround()
     {
-        return _fall.IsGround();
+        return _fall.IsGround(gameObject.transform);
     }
 
     public void FallMove()

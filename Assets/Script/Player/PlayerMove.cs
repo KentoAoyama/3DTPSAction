@@ -13,48 +13,78 @@ public class PlayerMove
     [SerializeField]
     private float _rotationSpeed = 200f;
 
-    /// <summary>
-    /// PlayerのTransform
-    /// </summary>
-    private Transform _transform;
+    [Tooltip("移動の加速度")]
+    [SerializeField]
+    private float _moveAcceleration = 1f;
 
-    private Rigidbody _rb;
+    [Tooltip("移動の減速度")]
+    [SerializeField]
+    private float _stopAcceleration = 1f;
 
-    public void Initialized(Transform transform, Rigidbody rb)
+    [SerializeField]
+    private float _moveTimer = 0f;
+    [SerializeField]
+    private float _stopTimer = 0f;
+
+    private Vector3 _currentVeclocity;
+
+    public void Initialized()
     {
-        _transform = transform;
-        _rb = rb; ;
+        _moveTimer = 0;
+        _stopTimer = 0;
     }
 
     /// <summary>
     /// Playerの移動に関する処理を定義するメソッド
     /// </summary>
-
-    public void Move(Vector2 moveDir)
+    public void Move(Transform moveTransform, Rigidbody rb, Vector2 moveDir)
     {
         var deltaTime = Time.deltaTime;
 
-        //移動をする方向をカメラの向きを参照したものにする
-        var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
-        velocity = Camera.main.transform.TransformDirection(velocity);
-        velocity = _speed * deltaTime * velocity.normalized;
-        velocity.y = _rb.velocity.y;
-
-        //移動を行う処理
-        _rb.velocity = velocity;
-
-        //向きを徐々に変更する
-        Quaternion changeRotation = default;
-        if (velocity.sqrMagnitude > 0.5f)　//速度が一定以上なら、向きを変更する
+        //入力があるかどうか確認
+        if (moveDir != Vector2.zero)
         {
-            velocity.y = 0f;
-            changeRotation = Quaternion.LookRotation(velocity, Vector3.up);
+            //停止時に使用するタイマーをリセット
+            _stopTimer = 0f;
+
+            //移動をする方向をカメラの向きを参照したものにする
+            var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
+            velocity = Camera.main.transform.TransformDirection(velocity).normalized;
+            velocity = _speed * deltaTime * velocity;
+            velocity.y = rb.velocity.y;
+
+            //移動の速度を球面線形補間する
+            _moveTimer += deltaTime;
+            float t = Mathf.Clamp01(_moveTimer / _moveAcceleration); //0から1の範囲にクランプ
+            velocity = Vector3.Slerp(Vector3.zero, velocity, t);
+
+            //移動を行う処理
+            rb.velocity = velocity;
+
+            //向きを徐々に変更する
+            Quaternion changeRotation = default;
+            if (velocity.sqrMagnitude > 0.5f) //速度が一定以上なら、向きを変更する
+            {
+                velocity.y = 0f;
+                changeRotation = Quaternion.LookRotation(velocity, Vector3.up);
+            }
+            //第1引数のQuaternionを第２引数のQuaternionまで第３引数の速度で変化させる
+            moveTransform.rotation =
+                Quaternion.RotateTowards(
+                    moveTransform.rotation,
+                    changeRotation,
+                    _rotationSpeed * deltaTime);
+
+            _currentVeclocity = velocity;
         }
-        //第1引数のQuaternionを第２引数のQuaternionまで第３引数の速度で変化させる
-        _transform.rotation =
-            Quaternion.RotateTowards(
-                _transform.rotation,
-                changeRotation,
-                _rotationSpeed * deltaTime);
+        else
+        {
+            //移動時に使用するタイマーをリセット
+            _moveTimer = 0f;
+
+            _stopTimer += deltaTime;
+            float t = Mathf.Clamp01(_stopTimer / _stopAcceleration); //0から1の範囲にクランプ
+            rb.velocity = Vector3.Slerp(_currentVeclocity, Vector3.zero, t);
+        }
     }
 }

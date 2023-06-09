@@ -16,11 +16,9 @@ public class PlayerFall
     [SerializeField]
     private LayerMask _layer;
 
-    private Transform _transform;
-
-    public void Initialized(Transform transform)
+    public void Initialized()
     {
-        _transform = transform;
+
     }
 
     /// <summary>
@@ -29,17 +27,20 @@ public class PlayerFall
     /// <param name="origin">Ray‚Ìn”­“_</param>
     /// <param name="direction">Ray‚ğŒ‚‚Â•ûŒü</param>
     /// <returns>Ú’n‚µ‚Ä‚¢‚é‚©</returns>
-    public bool IsGround()
+    public bool IsGround(Transform transform)
     {
-        Vector3 origin = _transform.position;
-        origin.y = _transform.position.y + 1f;
-        Vector3 direction = -_transform.up;
+        Vector3 origin = transform.position;
+        origin.y = transform.position.y + 1f;
+        Vector3 direction = -transform.up;
 
         Ray ray = new (origin, direction);
         bool isGround = Physics.Raycast(ray, _rayLength, _layer);
         return isGround;
     }
 
+    /// <summary>
+    /// —‰º’†‚Ì“®‚«
+    /// </summary>
     public void FallMove()
     {
 
