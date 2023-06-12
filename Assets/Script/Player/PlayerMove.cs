@@ -22,16 +22,14 @@ public class PlayerMove
     private float _stopAcceleration = 1f;
 
     [SerializeField]
-    private float _moveTimer = 0f;
-    [SerializeField]
-    private float _stopTimer = 0f;
+    private float _currentMoveSpeed = 0f;
+    public float CurrentMoveSpeed => _currentMoveSpeed;
 
     private Vector3 _currentVeclocity;
 
     public void Initialized()
     {
-        _moveTimer = 0;
-        _stopTimer = 0;
+        _currentMoveSpeed = 0;
     }
 
     /// <summary>
@@ -44,9 +42,6 @@ public class PlayerMove
         //入力があるかどうか確認
         if (moveDir != Vector2.zero)
         {
-            //停止時に使用するタイマーをリセット
-            _stopTimer = 0f;
-
             //移動をする方向をカメラの向きを参照したものにする
             var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
             velocity = Camera.main.transform.TransformDirection(velocity).normalized;
@@ -54,9 +49,9 @@ public class PlayerMove
             velocity.y = rb.velocity.y;
 
             //移動の速度を球面線形補間する
-            _moveTimer += deltaTime;
-            float t = Mathf.Clamp01(_moveTimer / _moveAcceleration); //0から1の範囲にクランプ
-            velocity = Vector3.Slerp(Vector3.zero, velocity, t);
+            _currentMoveSpeed += deltaTime / _moveAcceleration;
+            _currentMoveSpeed = Mathf.Clamp01(_currentMoveSpeed); //0から1の範囲にクランプ
+            velocity = Vector3.Slerp(Vector3.zero, velocity, _currentMoveSpeed);
 
             //移動を行う処理
             rb.velocity = velocity;
@@ -79,12 +74,9 @@ public class PlayerMove
         }
         else
         {
-            //移動時に使用するタイマーをリセット
-            _moveTimer = 0f;
-
-            _stopTimer += deltaTime;
-            float t = Mathf.Clamp01(_stopTimer / _stopAcceleration); //0から1の範囲にクランプ
-            rb.velocity = Vector3.Slerp(_currentVeclocity, Vector3.zero, t);
+            _currentMoveSpeed -= deltaTime / _stopAcceleration;
+            _currentMoveSpeed = Mathf.Clamp01(_currentMoveSpeed); //0から1の範囲にクランプ
+            rb.velocity = Vector3.Slerp(Vector3.zero, _currentVeclocity, _currentMoveSpeed);
         }
     }
 }

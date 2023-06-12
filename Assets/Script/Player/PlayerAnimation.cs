@@ -29,7 +29,7 @@ public class PlayerAnimation
     private void WalkParameterSet(float speed)
     {
         _animator.SetFloat(
-            "InputMove",
+            "Speed",
             speed);
     }
 }

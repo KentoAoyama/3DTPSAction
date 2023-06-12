@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        _animation.Update(_input.GetMoveDir().sqrMagnitude);
+        _animation.Update(_move.CurrentMoveSpeed);
         _stateMachine.Update();
     }
 
@@ -84,6 +84,11 @@ public class PlayerController : MonoBehaviour
             gameObject.transform,
             _rb, 
             _input.GetMoveDir());
+    }
+
+    public void Jump()
+    {
+
     }
 
     /// <summary>

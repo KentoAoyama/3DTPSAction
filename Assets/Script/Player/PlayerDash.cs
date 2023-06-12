@@ -57,7 +57,7 @@ public class PlayerDash
         var deltaTime = Time.deltaTime;
 
         //ˆÚ“®‚ğ‚·‚é•ûŒü‚ğƒJƒƒ‰‚ÌŒü‚«‚ğQÆ‚µ‚½‚à‚Ì‚É‚·‚é
-        var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
+        var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y + Vector3.forward * 2;
         velocity = Camera.main.transform.TransformDirection(velocity);
 
         //ˆÚ“®‚ğs‚¤ˆ—

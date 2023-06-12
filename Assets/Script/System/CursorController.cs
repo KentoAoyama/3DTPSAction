@@ -6,11 +6,7 @@ public class CursorController : MonoBehaviour
 {
     void Start()
     {
-        
-    }
-
-    void Update()
-    {
-        
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 }
