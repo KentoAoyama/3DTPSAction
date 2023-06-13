@@ -16,7 +16,6 @@ public class PlayerDashState : IPlayerState
     public void Enter()
     {
         DashAsync(default).Forget();
-        Debug.Log("DashState");
     }
 
     /// <summary>

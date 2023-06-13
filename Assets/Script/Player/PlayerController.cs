@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private PlayerDash _dash;
 
+    [Tooltip("Playerのジャンプに関する処理を定義するクラス")]
+    [SerializeField]
+    private PlayerJump _jump;
+
     [Tooltip("Playerの落下時に関する処理を定義するクラス")]
     [SerializeField]
     private PlayerFall _fall;
@@ -31,8 +35,13 @@ public class PlayerController : MonoBehaviour
     [Tooltip("PlayerのAnimationに関する処理を定義するクラス")]
     [SerializeField]
     private PlayerAnimation _animation;
+    /// <summary>
+    /// PlayerのAnimationを管理するクラスのプロパティ。StateMachineで使う用
+    /// </summary>
+    public PlayerAnimation Animation => _animation;
 
-    private readonly PlayerStateMachine _stateMachine = new();
+    [SerializeField]
+    private PlayerStateMachine _stateMachine = new();
     /// <summary>
     /// PlayerのStateを管理するクラス
     /// </summary>
@@ -86,9 +95,21 @@ public class PlayerController : MonoBehaviour
             _input.GetMoveDir());
     }
 
+    /// <summary>
+    /// ジャンプの処理を行う
+    /// </summary>
     public void Jump()
     {
+        _jump.Jump( _rb);
+    }
 
+    /// <summary>
+    /// 状態の遷移用。ジャンプの上昇処理を実行中かを表す
+    /// </summary>
+    /// <returns>ジャンプ中か</returns>
+    public bool IsJump()
+    {
+        return _jump.IsJump();
     }
 
     /// <summary>
@@ -99,11 +120,18 @@ public class PlayerController : MonoBehaviour
         await _dash.DashAsync( token, _input);
     }
 
+    /// <summary>
+    /// 接地判定
+    /// </summary>
+    /// <returns>接地しているか</returns>
 　　public bool IsGround()
     {
         return _fall.IsGround(gameObject.transform);
     }
 
+    /// <summary>
+    /// 落下状態時に行う移動処理
+    /// </summary>
     public void FallMove()
     {
         _fall.FallMove();

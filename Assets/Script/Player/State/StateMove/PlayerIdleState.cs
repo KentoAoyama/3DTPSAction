@@ -13,7 +13,7 @@ public class PlayerIdleState : IPlayerState
 
     public void Enter()
     {
-        Debug.Log("IdleState");
+        
     }
 
     public void Update()
@@ -28,6 +28,12 @@ public class PlayerIdleState : IPlayerState
         if (_player.Input.GetDash())
         {
             _player.StateMachine.TransitionState(new PlayerDashState(_player));
+        }
+
+        //Jump‚Ì“ü—Í‚ª‚ ‚ê‚ÎJumpState‚É‘JˆÚ
+        if (_player.Input.GetJump())
+        {
+            _player.StateMachine.TransitionState(new PlayerJumpState(_player));
         }
 
         //’n–Ê‚ÉÚG‚µ‚Ä‚¢‚È‚¯‚ê‚ÎFalló‘Ô‚Ö‘JˆÚ

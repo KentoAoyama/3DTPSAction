@@ -9,12 +9,6 @@ public class PlayerAnimation
     [SerializeField]
     private Animator _animator;
 
-
-    public void Initialized()
-    {
-        
-    }
-
     /// <summary>
     /// PlayerControllerì‡ÇÃUpdateÇ≈çsÇ§èàóù
     /// </summary>
@@ -31,5 +25,19 @@ public class PlayerAnimation
         _animator.SetFloat(
             "Speed",
             speed);
+    }
+
+    public void JumpParameterSet(bool isJump)
+    {
+        _animator.SetBool(
+            "IsJump",
+            isJump);
+    }
+
+    public void IsGroundParameterSet(bool isGround)
+    {
+        _animator.SetBool(
+            "IsGround",
+            isGround);
     }
 }

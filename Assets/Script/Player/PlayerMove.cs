@@ -21,7 +21,6 @@ public class PlayerMove
     [SerializeField]
     private float _stopAcceleration = 1f;
 
-    [SerializeField]
     private float _currentMoveSpeed = 0f;
     public float CurrentMoveSpeed => _currentMoveSpeed;
 

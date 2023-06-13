@@ -15,4 +15,9 @@ public class InputProvider : IInputProvider
 
         return new Vector2(h, v);
     }
+
+    public bool GetJump()
+    {
+        return Input.GetButton("Jump");
+    }
 }

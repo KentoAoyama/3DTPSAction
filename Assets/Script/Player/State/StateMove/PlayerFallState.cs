@@ -13,7 +13,6 @@ public class PlayerFallState : IPlayerState
 
     public void Enter()
     {
-        Debug.Log("FallState");
 
     }
 

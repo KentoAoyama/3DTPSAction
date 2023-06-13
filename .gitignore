@@ -62,3 +62,5 @@ crashlytics-build.properties
 UserSettings/
 Assets/PLATEAU-SDK-for-Unity
 Assets/PLATEAU-SDK-for-Unity.meta
+Assets/Commons/Model/Animation/AnimModel
+Assets/Commons/Model/Animation/AnimModel.meta

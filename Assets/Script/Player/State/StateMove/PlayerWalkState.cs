@@ -13,8 +13,7 @@ public class PlayerWalkState : IPlayerState
 
     public void Enter()
     {
-        Debug.Log("WalkState");
-
+        
     }
 
     public void Update()
@@ -29,6 +28,12 @@ public class PlayerWalkState : IPlayerState
         if (_player.Input.GetDash())
         {
             _player.StateMachine.TransitionState(new PlayerDashState(_player));
+        }
+
+        //Jump‚Ì“ü—Í‚ª‚ ‚ê‚ÎJumpState‚É‘JˆÚ
+        if (_player.Input.GetJump())
+        {
+            _player.StateMachine.TransitionState(new PlayerJumpState(_player));
         }
 
         //’n–Ê‚ÉÚG‚µ‚Ä‚¢‚È‚¯‚ê‚ÎFalló‘Ô‚Ö‘JˆÚ

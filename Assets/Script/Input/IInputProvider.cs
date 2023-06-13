@@ -7,4 +7,6 @@ public interface IInputProvider
     Vector2 GetMoveDir();
 
     bool GetDash();
+
+    bool GetJump();
 }
