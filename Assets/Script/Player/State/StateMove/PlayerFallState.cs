@@ -13,7 +13,7 @@ public class PlayerFallState : IPlayerState
 
     public void Enter()
     {
-
+        _player.Animation.IsGroundParameterSet(false);
     }
 
     public void Update()
@@ -22,15 +22,18 @@ public class PlayerFallState : IPlayerState
         if (_player.Input.GetDash())
         {
             _player.StateMachine.TransitionState(new PlayerDashState(_player));
+            return;
         }
 
         //Ú’n‚ğ‚µ‚½‚çIdleó‘Ô‚É‘JˆÚ
         if (_player.IsGround())
         {
             _player.StateMachine.TransitionState(new PlayerIdleState(_player));
+            return;
         }
 
-        _player.FallMove();
+        _player.Attack();
+        _player.Fall();
     }
 
     public void Exit()

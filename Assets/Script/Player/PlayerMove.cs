@@ -43,14 +43,16 @@ public class PlayerMove
         {
             //移動をする方向をカメラの向きを参照したものにする
             var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
-            velocity = Camera.main.transform.TransformDirection(velocity).normalized;
-            velocity = _speed * deltaTime * velocity;
+            velocity = Camera.main.transform.TransformDirection(velocity);
+            velocity.y = 0f;
+            velocity = _speed * deltaTime * velocity.normalized;
             velocity.y = rb.velocity.y;
 
             //移動の速度を球面線形補間する
             _currentMoveSpeed += deltaTime / _moveAcceleration;
             _currentMoveSpeed = Mathf.Clamp01(_currentMoveSpeed); //0から1の範囲にクランプ
-            velocity = Vector3.Slerp(Vector3.zero, velocity, _currentMoveSpeed);
+            Vector3 targetVelo = new(0f, rb.velocity.y, 0f);
+            velocity = Vector3.Slerp(targetVelo, velocity, _currentMoveSpeed);
 
             //移動を行う処理
             rb.velocity = velocity;

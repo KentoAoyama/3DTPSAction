@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.VFX;
@@ -31,6 +32,10 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Playerの落下時に関する処理を定義するクラス")]
     [SerializeField]
     private PlayerFall _fall;
+
+    [Tooltip("Playerの攻撃に関する処理を定義するクラス")]
+    [SerializeField]
+    private PlayerAttack _attack;
 
     [Tooltip("PlayerのAnimationに関する処理を定義するクラス")]
     [SerializeField]
@@ -74,9 +79,17 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// 腕のIKを設定
+    /// </summary>
+    private void OnAnimatorIK(int layerIndex)
+    {
+        _animation.SetIK(_attack.ShootPos);
+    }
+
+    /// <summary>
     /// 通常の移動時に行う処理
     /// </summary>
-    public void Walk()
+    public void Move()
     {
         _move.Move(
             gameObject.transform,
@@ -100,7 +113,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void Jump()
     {
-        _jump.Jump( _rb);
+        _jump.Jump(_rb);
     }
 
     /// <summary>
@@ -121,20 +134,35 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// 落下に関する処理
+    /// </summary>
+    public void Fall()
+    {
+        _fall.Fall(_rb);
+    }
+
+    /// <summary>
     /// 接地判定
     /// </summary>
     /// <returns>接地しているか</returns>
 　　public bool IsGround()
     {
-        return _fall.IsGround(gameObject.transform);
+        bool isGround = _fall.IsGround(gameObject.transform);
+        _animation.IsGroundParameterSet(isGround);
+
+        return isGround;
     }
 
-    /// <summary>
-    /// 落下状態時に行う移動処理
-    /// </summary>
-    public void FallMove()
+    public void Attack()
     {
-        _fall.FallMove();
+        _attack.BulletShoot(
+            _input.GetAim(),
+            _input.GetShoot(),
+            transform.position);
+
+        _attack.ShootPositionSet();
+
+        _animation.ChangeIKWeight(_input.GetAim());
     }
 
     private void OnDrawGizmos()

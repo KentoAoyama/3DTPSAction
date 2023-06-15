@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UniRx.Triggers;
 using UnityEngine;
 
@@ -14,15 +15,21 @@ public class PlayerJump
     [SerializeField]
     private float _upAcceleration = 1f;
 
-    [Tooltip("ジャンプ中の移動速度の最低値")]
-    [SerializeField, Range(0, 1)]
-    private float _speedDownLimit = 0.1f;
+    [Tooltip("ジャンプするまでにかかる時間")]
+    [SerializeField]
+    private float _jumpInterval = 0.5f;
 
     private float _currentUpSpeed = 1f;
+
+    private float _timer = 0f;
+
+    [SerializeField]
+    private bool _isJump;
 
     public void Initilaized()
     {
         _currentUpSpeed = 1f;
+        _timer = 0f;
     }
 
     /// <summary>
@@ -33,14 +40,19 @@ public class PlayerJump
     {
         var deltaTime = Time.deltaTime;
 
-        Vector3 moveVec = new(rb.velocity.x, 0f, rb.velocity.z);
-        var velocity = _jumpSpeed * Vector3.up + moveVec * _speedDownLimit;
+        _timer += deltaTime;
+        if (_timer < _jumpInterval) return;
 
+        //ジャンプした瞬間のvelocity
+        Vector3 xyVelocity = new(rb.velocity.x, 0f, rb.velocity.z);
+        var velocity = _jumpSpeed * deltaTime * Vector3.up + xyVelocity;
+
+        //速度を線形補完する
+        velocity = Vector3.Lerp(xyVelocity, velocity, _currentUpSpeed);
+
+        //現在の減速度を計算
         _currentUpSpeed -= deltaTime / _upAcceleration;
         _currentUpSpeed = Mathf.Clamp01(_currentUpSpeed);
-        var xyVelocity = rb.velocity;
-        xyVelocity.y = 0f;
-        velocity = Vector3.Slerp(xyVelocity, velocity, _currentUpSpeed);
 
         rb.velocity = velocity;
     }
@@ -50,10 +62,16 @@ public class PlayerJump
         if (_currentUpSpeed <= 0.01)
         {
             _currentUpSpeed = 1f;
+            _timer = 0f;
+
+            _isJump = false;
+
             return false;
         }
         else
         {
+            _isJump = true;
+
             return true;
         }
     }

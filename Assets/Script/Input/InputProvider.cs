@@ -20,4 +20,14 @@ public class InputProvider : IInputProvider
     {
         return Input.GetButton("Jump");
     }
+
+    public bool GetShoot()
+    {
+        return Input.GetButton("Fire1");
+    }
+
+    public bool GetAim()
+    {
+        return Input.GetButton("Fire2");
+    }
 }

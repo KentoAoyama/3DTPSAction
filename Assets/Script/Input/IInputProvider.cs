@@ -9,4 +9,8 @@ public interface IInputProvider
     bool GetDash();
 
     bool GetJump();
+
+    bool GetShoot();
+
+    bool GetAim();
 }

@@ -9,16 +9,34 @@ public class PlayerFall
     [Tooltip("Rayの長さ")]
     [SerializeField]
     private float _rayLength = 10f;
-
     public float RayLength => _rayLength;
 
     [Tooltip("接地判定をとるLayer")]
     [SerializeField]
     private LayerMask _layer;
 
+    [Tooltip("落下のスピード")]
+    [SerializeField]
+    private float _fallSpeed = 200f;
+
+    [Tooltip("落下の加速度")]
+    [SerializeField]
+    private float _downAcceleration = 1f;
+
+    private float _currentDownSpeed = 0f;
+
+    [SerializeField]
+    private bool _isGround;
+
+
     public void Initialized()
     {
+        _currentDownSpeed = 0f;
+    }
 
+    public void Fall(Rigidbody rb)
+    {
+        
     }
 
     /// <summary>
@@ -35,14 +53,14 @@ public class PlayerFall
 
         Ray ray = new (origin, direction);
         bool isGround = Physics.Raycast(ray, _rayLength, _layer);
+
+        if (isGround)
+        {
+            _currentDownSpeed = 0;
+        }
+
+        _isGround = isGround;
+
         return isGround;
-    }
-
-    /// <summary>
-    /// 落下中の動き
-    /// </summary>
-    public void FallMove()
-    {
-
     }
 }
