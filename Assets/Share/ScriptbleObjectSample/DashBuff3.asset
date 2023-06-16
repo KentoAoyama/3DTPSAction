@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95fbf7a217197074fb9ffee3eb75f509, type: 3}
+  m_Name: DashBuff3
+  m_EditorClassIdentifier: 
+  _skillName: "\u30C0\u30C3\u30B7\u30E5\u901F\u5EA6\u30A2\u30C3\u30D7 3"
+  _type: 3
+  _description: "\u30C0\u30C3\u30B7\u30E5\u901F\u5EA6\u30A2\u30C3\u30D7+3"
+  _skillPoint: 3
+  _attackDamageUp: 0
+  _dashSpeedUp: 3
+  _lifePointUp: 0
+  _attackIntervalDown: 0

@@ -13,4 +13,6 @@ public interface IInputProvider
     bool GetShoot();
 
     bool GetAim();
+
+    bool GetChangeWindow();
 }

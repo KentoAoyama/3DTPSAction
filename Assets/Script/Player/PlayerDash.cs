@@ -26,6 +26,10 @@ public class PlayerDash
     [SerializeField]
     private int _effectRate = 2000;
 
+    [Header("デバッグ用")]
+    [SerializeField]
+    private float _currenDashSpeed = 0f;
+
     private const string EFFECT_RATE = "Rate";
 
     public void Initialized()
@@ -52,16 +56,20 @@ public class PlayerDash
     /// Y方向の動きがある以外はほとんど同じ
     /// </summary>
     /// <param name="moveDir"></param>
-    public void DashMove(Transform moveTransform, Rigidbody rb, Vector2 moveDir)
+    public void DashMove(Transform moveTransform, Rigidbody rb, Vector2 moveDir, float skillUpValue)
     {
+        //デバッグ用
+        _currenDashSpeed = _dashSpeed + skillUpValue;
+
+
         var deltaTime = Time.deltaTime;
 
         //移動をする方向をカメラの向きを参照したものにする
-        var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
+        var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y + Vector3.forward * 2;
         velocity = Camera.main.transform.TransformDirection(velocity);
 
         //移動を行う処理
-        rb.velocity = _dashSpeed * deltaTime * velocity.normalized;
+        rb.velocity = (_dashSpeed + skillUpValue)/* * deltaTime*/ * velocity.normalized;
 
         //向きを徐々に変更する
         Quaternion changeRotation = default;

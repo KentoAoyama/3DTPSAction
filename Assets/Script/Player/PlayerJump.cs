@@ -45,7 +45,7 @@ public class PlayerJump
 
         //ジャンプした瞬間のvelocity
         Vector3 xyVelocity = new(rb.velocity.x, 0f, rb.velocity.z);
-        var velocity = _jumpSpeed * deltaTime * Vector3.up + xyVelocity;
+        var velocity = _jumpSpeed * Vector3.up + xyVelocity;
 
         //速度を線形補完する
         velocity = Vector3.Lerp(xyVelocity, velocity, _currentUpSpeed);

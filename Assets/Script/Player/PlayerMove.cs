@@ -45,7 +45,7 @@ public class PlayerMove
             var velocity = Vector3.right * moveDir.x + Vector3.forward * moveDir.y;
             velocity = Camera.main.transform.TransformDirection(velocity);
             velocity.y = 0f;
-            velocity = _speed * deltaTime * velocity.normalized;
+            velocity = _speed/* * deltaTime*/ * velocity.normalized;
             velocity.y = rb.velocity.y;
 
             //ˆÚ“®‚Ì‘¬“x‚ğ‹…–ÊüŒ`•âŠÔ‚·‚é

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,18 +24,26 @@ public class PlayerAttack
     [SerializeField]
     private float _rayLength = 100f;
 
+    [Tooltip("射撃の着弾地点になるオブジェクトのレイヤー")]
+    [SerializeField]
+    private LayerMask _layer;
+
     [Tooltip("クロスヘアのImage")]
     [SerializeField]
     private Image _crassHair;
-
-    [Tooltip("球体")]
-    [SerializeField]
-    private GameObject _sphere;
+    public Image CrossHair => _crassHair;
 
     [Tooltip("射撃を行う地点に移動させるオブジェクト")]
     [SerializeField]
     private Transform _shootPos;
     public Transform ShootPos => _shootPos;
+
+    [Header("デバッグ用")]
+    [SerializeField]
+    private float _currentInterval;
+
+    [SerializeField]
+    private float _currentUpDamage;
 
     private float _intervalTimer = 0f;
 
@@ -46,24 +51,29 @@ public class PlayerAttack
     /// <summary>
     /// プレイヤーの射撃処理
     /// </summary>
-    public void BulletShoot(bool isAim, bool isShoot, Vector3 playerPos)
+    public void BulletShoot(bool isAim, bool isShoot, Vector3 playerPos, int skillUpDamage, float skillDownInterval)
     {
+        //デバッグ用
+        _currentInterval = _shootInterval * skillDownInterval;
+        _currentUpDamage = skillUpDamage;
+
+
         //インターバルにカウントを加算
         _intervalTimer += Time.deltaTime;
 
         if (!isAim)
         {
-            if (_sphere != null)
-                _sphere.SetActive(false);
+            if (_crassHair != null)
+                _crassHair.enabled = false;
             return;
         }
         else
         {
-            if (_sphere != null)
-                _sphere.SetActive(true);
+            if (_crassHair != null)
+                _crassHair.enabled = true;
         }
 
-        if (isShoot && _shootInterval < _intervalTimer)
+        if (isShoot && _shootInterval - skillDownInterval < _intervalTimer)
         {
             //弾を生成
             BulletController bulletController = Object.Instantiate(_bullet).GetComponent<BulletController>();
@@ -73,7 +83,7 @@ public class PlayerAttack
 
             // Rayを撃ち、当たっていたらその座標に向ける
             Ray ray = Camera.main.ScreenPointToRay(_crassHair.rectTransform.position);
-            if (Physics.Raycast(ray, out RaycastHit hit, _rayLength))
+            if (Physics.Raycast(ray, out RaycastHit hit, _rayLength, _layer))
             {
                 var muzzlePos = hit.point - playerPos;
                 muzzlePos = muzzlePos.normalized * _muzzleLength + playerPos;
@@ -90,7 +100,7 @@ public class PlayerAttack
             }
 
             //弾を動かす
-            bullet.GetComponent<BulletController>().Shoot(_bulletSpeed);
+            bullet.GetComponent<BulletController>().Shoot(_bulletSpeed, skillUpDamage);
 
             //インターバルをリセット
             _intervalTimer = 0f;

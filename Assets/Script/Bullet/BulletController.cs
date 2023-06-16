@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UIElements;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour
@@ -9,19 +7,32 @@ public class BulletController : MonoBehaviour
     [SerializeField]
     private float _destroyInterval = 5f;
 
-    public void Shoot(float bulletSpeed)
+    private int _damage = 1;
+
+    public void Shoot(float bulletSpeed, int skillDamage)
     {
         GetComponent<Rigidbody>()
             .AddForce(
-                bulletSpeed * Time.deltaTime * transform.forward,
+                bulletSpeed * transform.forward,
                 ForceMode.Impulse);
 
+        _damage += skillDamage;
         StartCoroutine(DestroyInterval());
     }
 
     private IEnumerator DestroyInterval()
     {
         yield return new WaitForSeconds(_destroyInterval);
+
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent(out IHittable hit) && !other.gameObject.CompareTag("Player"))
+        {
+            hit.Hit(_damage);
+        }
 
         Destroy(gameObject);
     }

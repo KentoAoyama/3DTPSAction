@@ -30,4 +30,9 @@ public class InputProvider : IInputProvider
     {
         return Input.GetButton("Fire2");
     }
+
+    public bool GetChangeWindow()
+    {
+        return Input.GetButtonDown("Cancel");
+    }
 }

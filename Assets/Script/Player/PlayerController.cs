@@ -1,17 +1,9 @@
 using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
 using System.Threading;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.VFX;
-using UnityEngine.Windows;
 using VContainer;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using static UnityEngine.UI.Image;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IHittable
 {
     [Tooltip("PlayerのRigidbody")]
     [SerializeField]
@@ -37,6 +29,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private PlayerAttack _attack;
 
+    [Tooltip("Playerのライフに関する処理を定義するクラス")]
+    [SerializeField]
+    private PlayerLife _life;
+
     [Tooltip("PlayerのAnimationに関する処理を定義するクラス")]
     [SerializeField]
     private PlayerAnimation _animation;
@@ -56,19 +52,22 @@ public class PlayerController : MonoBehaviour
     private readonly IInputProvider _input;
     public IInputProvider Input => _input;
 
-    void Start()
-    {
-        Initialized();
+    private InGameController.SkillValue _skillValue;
+    public InGameController.SkillValue SkillValue 
+    { 
+        get => _skillValue; 
+        set => _skillValue = value; 
     }
 
     /// <summary>
     /// クラスの初期化処理を行う
     /// </summary>
-    private void Initialized()
+    public void Initialized()
     {
         _move.Initialized();
         _dash.Initialized();
         _fall.Initialized();
+        _life.Initilaized(_skillValue.LifePointUp);
         _stateMachine.Initialized(new PlayerIdleState(this));
     }
 
@@ -93,7 +92,7 @@ public class PlayerController : MonoBehaviour
     {
         _move.Move(
             gameObject.transform,
-            _rb, 
+            _rb,
             _input.GetMoveDir());
     }
 
@@ -102,10 +101,14 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void Dash()
     {
+        if (_attack.CrossHair != null)
+            _attack.CrossHair.enabled = false;
+
         _dash.DashMove(
             gameObject.transform,
-            _rb, 
-            _input.GetMoveDir());
+            _rb,
+            _input.GetMoveDir(),
+            _skillValue.DashSpeedUp);
     }
 
     /// <summary>
@@ -130,7 +133,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public async UniTask DashAsync(CancellationToken token)
     {
-        await _dash.DashAsync( token, _input);
+        await _dash.DashAsync(token, _input);
     }
 
     /// <summary>
@@ -145,7 +148,7 @@ public class PlayerController : MonoBehaviour
     /// 接地判定
     /// </summary>
     /// <returns>接地しているか</returns>
-　　public bool IsGround()
+    public bool IsGround()
     {
         bool isGround = _fall.IsGround(gameObject.transform);
         _animation.IsGroundParameterSet(isGround);
@@ -158,11 +161,18 @@ public class PlayerController : MonoBehaviour
         _attack.BulletShoot(
             _input.GetAim(),
             _input.GetShoot(),
-            transform.position);
+            transform.position,
+            _skillValue.AttackDamageUp,
+            _skillValue.AttackIntervalDown);
 
         _attack.ShootPositionSet();
 
         _animation.ChangeIKWeight(_input.GetAim());
+    }
+
+    public void Hit(int damage)
+    {
+        _life.Hit(damage, _skillValue.LifePointUp);
     }
 
     private void OnDrawGizmos()
