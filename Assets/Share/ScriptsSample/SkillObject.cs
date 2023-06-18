@@ -22,6 +22,9 @@ public class SkillObject : ScriptableObject
     int _skillPoint = 1;
     public int SkillPoint => _skillPoint;
 
+
+    //======ここから下がこのゲームオリジナルの部分======
+
     [Header("攻撃のダメージアップ")]
     [SerializeField]
     private int _attackDamageUp = 0;

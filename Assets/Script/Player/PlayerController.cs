@@ -80,10 +80,10 @@ public class PlayerController : MonoBehaviour, IHittable
     /// <summary>
     /// ˜r‚ÌIK‚ğİ’è
     /// </summary>
-    private void OnAnimatorIK(int layerIndex)
-    {
-        _animation.SetIK(_attack.ShootPos);
-    }
+    //private void OnAnimatorIK(int layerIndex)
+    //{
+    //    //_animation.SetIK(_attack.ShootPos);
+    //}
 
     /// <summary>
     /// ’Êí‚ÌˆÚ“®‚És‚¤ˆ—

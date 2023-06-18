@@ -26,16 +26,15 @@ public class DataSaveManager
     /// <typeparam name="T">保存するデータの型</typeparam>
     /// <param name="targetObj">保存するデータ（必ず System.Serializable 属性をつける）</param>
     /// <param name="fileName">保存するファイルの名前</param>
-    public void Save<T>(T saveObj, string fileName)
+    public void Save<T>(T save, string fileName)
     {
         StreamWriter writer;
         string path = Application.persistentDataPath + "/" + fileName + ".json";
         writer = new StreamWriter(path, false);
 
-        string saveData = JsonUtility.ToJson(saveObj);
+        string saveData = JsonUtility.ToJson(save);
 
         writer.Write(saveData);
-        writer.Flush();
         writer.Close();
     }
 
